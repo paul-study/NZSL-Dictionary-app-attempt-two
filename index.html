@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NZSL - Speech to Sign Language</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤟 NZSL Speech to Sign</h1>
+            <p class="subtitle">New Zealand Sign Language Translator</p>
+        </header>
+
+        <main>
+            <!-- Speech Input Section -->
+            <section class="input-section">
+                <h2>Speak or Type Your Words</h2>
+                
+                <div class="speech-controls">
+                    <button id="startBtn" class="btn btn-primary">
+                        <span class="mic-icon">🎤</span>
+                        <span class="btn-text">Start Speaking</span>
+                    </button>
+                    <button id="stopBtn" class="btn btn-secondary" disabled>
+                        <span class="stop-icon">⏹️</span>
+                        <span class="btn-text">Stop</span>
+                    </button>
+                </div>
+
+                <div class="status-indicator" id="statusIndicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Ready to listen</span>
+                </div>
+
+                <div class="text-input-container">
+                    <label for="textInput">Or type your text here:</label>
+                    <textarea id="textInput" placeholder="Type words to translate to sign language..."></textarea>
+                    <button id="translateBtn" class="btn btn-translate">Translate to Signs</button>
+                </div>
+            </section>
+
+            <!-- Recognized Text Display -->
+            <section class="recognized-section">
+                <h2>Recognized Words</h2>
+                <div id="recognizedText" class="recognized-text">
+                    <p class="placeholder-text">Your spoken words will appear here...</p>
+                </div>
+                <div class="word-list" id="wordList"></div>
+            </section>
+
+            <!-- Sign Video Display -->
+            <section class="video-section">
+                <h2>Sign Language Videos</h2>
+                
+                <div class="video-container" id="videoContainer">
+                    <div class="video-placeholder">
+                        <span class="placeholder-icon">🤲</span>
+                        <p>Sign videos will appear here after translation</p>
+                    </div>
+                </div>
+
+                <div class="video-controls" id="videoControls" style="display: none;">
+                    <button id="prevSign" class="btn btn-nav">← Previous</button>
+                    <span id="signProgress" class="sign-progress">1 / 1</span>
+                    <button id="nextSign" class="btn btn-nav">Next →</button>
+                </div>
+
+                <div class="current-sign-info" id="currentSignInfo"></div>
+            </section>
+
+            <!-- Search Section -->
+            <section class="search-section">
+                <h2>Search Signs</h2>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search for a sign...">
+                    <button id="searchBtn" class="btn btn-search">Search</button>
+                </div>
+                <div class="search-results" id="searchResults"></div>
+            </section>
+
+            <!-- Slideshow Section -->
+            <section class="slideshow-section">
+                <h2>🔄 Sign Slideshow</h2>
+                <p class="slideshow-description">Play all translated signs in a continuous loop</p>
+                
+                <div class="slideshow-controls">
+                    <button id="slideshowPlayBtn" class="btn btn-primary" disabled>
+                        <span class="play-icon">▶️</span>
+                        <span class="btn-text">Play Slideshow</span>
+                    </button>
+                    <button id="slideshowPauseBtn" class="btn btn-secondary" disabled>
+                        <span class="pause-icon">⏸️</span>
+                        <span class="btn-text">Pause</span>
+                    </button>
+                    <button id="slideshowStopBtn" class="btn btn-secondary" disabled>
+                        <span class="stop-icon">⏹️</span>
+                        <span class="btn-text">Stop</span>
+                    </button>
+                </div>
+
+                <div class="slideshow-status" id="slideshowStatus">
+                    <span class="status-text">Translate some words to start the slideshow</span>
+                </div>
+
+                <div class="slideshow-video-container" id="slideshowVideoContainer">
+                    <div class="slideshow-placeholder">
+                        <span class="placeholder-icon">🎬</span>
+                        <p>Slideshow will appear here</p>
+                    </div>
+                </div>
+
+                <div class="slideshow-progress" id="slideshowProgress" style="display: none;">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="slideshowProgressBar"></div>
+                    </div>
+                    <span class="slideshow-counter" id="slideshowCounter">0 / 0</span>
+                </div>
+
+                <div class="slideshow-sign-info" id="slideshowSignInfo"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>NZSL Dictionary - Speech to Sign Language Translator</p>
+            <p class="note">Note: This app uses browser speech recognition. Works best in Chrome.</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
