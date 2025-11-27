@@ -1,6 +1,145 @@
 // NZSL Speech to Sign Language App
 // Main Application JavaScript
 
+/**
+ * Convert English text to NZSL gloss structure
+ * Handles the 3 Big Rules of NZSL:
+ * 1. Time First - "Tomorrow" moves to the front
+ * 2. Adjectives After Nouns - "Red Apple" → "APPLE RED"
+ * 3. Negatives Last - "Not" moves to the end
+ */
+function getNZSLGloss(englishText) {
+    // Check if Compromise library is loaded
+    if (typeof nlp === 'undefined') {
+        console.warn('Compromise NLP library not loaded, using basic word splitting');
+        return basicWordSplit(englishText);
+    }
+    
+    try {
+        // 1. Initialize the NLP library
+        let doc = nlp(englishText);
+
+        // --- RULE A: EXTRACT & REMOVE TIME ---
+        let timeWords = [];
+        const timePatterns = '(tomorrow|yesterday|today|tonight|later|soon|now|morning|afternoon|evening|night|week|month|year|monday|tuesday|wednesday|thursday|friday|saturday|sunday)';
+        
+        try {
+            timeWords = doc.match(timePatterns).out('array');
+            doc.match(timePatterns).remove();
+        } catch (e) {
+            console.warn('Time extraction failed:', e);
+        }
+
+        // --- RULE B: EXTRACT & REMOVE NEGATIVES ---
+        let negativeFound = false;
+        try {
+            negativeFound = doc.match('(not|no|never|didnt|dont|cant|cannot|wont|isnt|arent|wasnt|werent)').found;
+            doc.match('(not|no|never|didnt|dont|cant|cannot|wont|isnt|arent|wasnt|werent)').remove();
+        } catch (e) {
+            console.warn('Negative extraction failed:', e);
+        }
+
+        // --- RULE C: CLEAN UP GRAMMAR WORDS ---
+        try {
+            doc.match('(a|an|the|is|am|are|was|were|be|been|being|to|will|would|could|should|have|has|had|do|does|did|may|might|must|shall)').remove();
+        } catch (e) {
+            console.warn('Grammar word removal failed:', e);
+        }
+
+        // --- RULE D: GET REMAINING WORDS ---
+        let coreSentence = [];
+        try {
+            // Use .out('array') which is more reliable than .termList()
+            const words = doc.out('array');
+            
+            // Get terms for adjective/noun swapping
+            const terms = doc.json();
+            
+            if (terms && terms.length > 0 && terms[0].terms) {
+                const termList = terms[0].terms;
+                for (let i = 0; i < termList.length; i++) {
+                    let current = termList[i];
+                    let next = termList[i + 1];
+
+                    // Check if we have [Adjective] followed by [Noun]
+                    const isAdjective = current.tags && (current.tags.includes('Adjective') || current.tags.includes('Adj'));
+                    const nextIsNoun = next && next.tags && (next.tags.includes('Noun') || next.tags.includes('Singular') || next.tags.includes('Plural'));
+                    
+                    if (isAdjective && nextIsNoun) {
+                        // Push Noun first, then Adjective (NZSL structure)
+                        coreSentence.push(next.text.toLowerCase());
+                        coreSentence.push(current.text.toLowerCase());
+                        i++; // Skip the next word since we just used it
+                    } else {
+                        coreSentence.push(current.text.toLowerCase());
+                    }
+                }
+            } else {
+                // Fallback: just use the words array
+                coreSentence = words.map(w => w.toLowerCase());
+            }
+        } catch (e) {
+            console.warn('Term processing failed, using fallback:', e);
+            coreSentence = doc.out('array').map(w => w.toLowerCase());
+        }
+
+        // --- RULE E: PRONOUN FIXES ---
+        coreSentence = coreSentence.map(word => {
+            if (["i", "my", "mine", "me"].includes(word)) return "me";
+            if (["you", "your", "yours"].includes(word)) return "you";
+            if (["he", "him", "his"].includes(word)) return "he";
+            if (["she", "her", "hers"].includes(word)) return "she";
+            if (["we", "us", "our", "ours"].includes(word)) return "we";
+            if (["they", "them", "their", "theirs"].includes(word)) return "they";
+            return word;
+        });
+
+        // --- FINAL ASSEMBLY ---
+        let finalGloss = [];
+
+        // Add Time (if any) - time comes first in NZSL
+        timeWords.forEach(t => {
+            const cleaned = t.toLowerCase().trim();
+            if (cleaned) finalGloss.push(cleaned);
+        });
+        
+        // Add Core (Swapped Adjectives/Nouns/Verbs)
+        finalGloss = finalGloss.concat(coreSentence.filter(w => w && w.trim()));
+
+        // Add Negative (if any) - negation comes last in NZSL
+        if (negativeFound) finalGloss.push("not");
+
+        // Remove empty strings and filter
+        finalGloss = finalGloss.filter(w => w && w.trim().length > 0);
+
+        // If we ended up with nothing, fall back to basic splitting
+        if (finalGloss.length === 0) {
+            return basicWordSplit(englishText);
+        }
+
+        return finalGloss;
+        
+    } catch (error) {
+        console.error('NZSL Gloss conversion failed:', error);
+        return basicWordSplit(englishText);
+    }
+}
+
+/**
+ * Basic word splitting fallback when NLP fails
+ */
+function basicWordSplit(text) {
+    // Remove common grammar words manually
+    const stopWords = ['a', 'an', 'the', 'is', 'am', 'are', 'was', 'were', 'be', 'been', 'being', 
+                       'to', 'will', 'would', 'could', 'should', 'have', 'has', 'had', 
+                       'do', 'does', 'did', 'may', 'might', 'must', 'shall'];
+    
+    return text.toLowerCase()
+        .replace(/[^\w\s]/g, '')
+        .split(/\s+/)
+        .filter(word => word.length > 0 && !stopWords.includes(word));
+}
+
 class NZSLApp {
     constructor() {
         // Sign dictionary data
@@ -290,11 +429,22 @@ class NZSLApp {
     }
     
     translateText(text) {
-        // Split text into words
-        const words = text.toLowerCase()
-            .replace(/[^\w\s]/g, '') // Remove punctuation
-            .split(/\s+/)
-            .filter(word => word.length > 0);
+        // Convert English to NZSL gloss structure
+        // This handles: Time first, Adjectives after nouns, Negatives last
+        const glossWords = getNZSLGloss(text);
+        
+        // Display the NZSL structure for educational purposes
+        console.log('Original:', text);
+        console.log('NZSL Gloss:', glossWords.join(' + '));
+        
+        // Update recognized text to show both original and NZSL structure
+        this.elements.recognizedText.innerHTML = `
+            <p class="actual-text">${text}</p>
+            <p class="nzsl-gloss"><strong>NZSL Structure:</strong> ${glossWords.map(w => w.toUpperCase()).join(' → ')}</p>
+        `;
+        
+        // Use the NZSL-structured words
+        const words = glossWords;
         
         // Find signs for each word
         this.currentSigns = [];
@@ -304,18 +454,30 @@ class NZSLApp {
             const signIds = this.findSignsForWord(word);
             
             if (signIds.length > 0) {
-                wordListHtml.push(`
-                    <span class="word-item found" data-word="${word}" data-sign-id="${signIds[0]}">
-                        ${word} ✓
-                    </span>
-                `);
+                const signId = signIds[0];
+                const sign = this.signs[signId] || this.signs[String(signId)] || this.signs[Number(signId)];
                 
-                // Add the first matching sign to our sequence
-                this.currentSigns.push({
-                    word: word,
-                    signId: signIds[0],
-                    sign: this.signs[signIds[0]]
-                });
+                if (sign) {
+                    wordListHtml.push(`
+                        <span class="word-item found" data-word="${word}" data-sign-id="${signId}">
+                            ${word} ✓
+                        </span>
+                    `);
+                    
+                    // Add the first matching sign to our sequence
+                    this.currentSigns.push({
+                        word: word,
+                        signId: signId,
+                        sign: sign
+                    });
+                } else {
+                    console.warn(`Sign ID ${signId} found in index but not in signs data`);
+                    wordListHtml.push(`
+                        <span class="word-item not-found" data-word="${word}">
+                            ${word} ✗
+                        </span>
+                    `);
+                }
             } else {
                 wordListHtml.push(`
                     <span class="word-item not-found" data-word="${word}">
@@ -410,6 +572,12 @@ class NZSLApp {
         
         const current = this.currentSigns[this.currentSignIndex];
         const sign = current.sign;
+        
+        // Guard against undefined sign
+        if (!sign) {
+            console.error('Sign data not found for:', current);
+            return;
+        }
         
         // Build video URL - try local first, then online source
         // Videos are hosted on AWS S3: nzsl-signbank-media-production.s3.amazonaws.com
@@ -737,4 +905,83 @@ class NZSLApp {
 // Initialize the app when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     window.nzslApp = new NZSLApp();
+    
+    // Initialize Feedback Manager
+    initFeedbackForm();
 });
+
+// Feedback Form Functionality
+function initFeedbackForm() {
+    // EmailJS configuration
+    const EMAILJS_SERVICE_ID = 'service_rtncsgq';
+    const EMAILJS_TEMPLATE_ID = 'template_zzoq2ji';
+    const EMAILJS_PUBLIC_KEY = 'FkQY2Ii4rpYWSwujD';
+    
+    // Initialize EmailJS
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+    
+    const feedbackBtn = document.getElementById('feedbackBtn');
+    const modal = document.getElementById('feedbackModal');
+    const closeBtn = modal.querySelector('.close-modal');
+    const form = document.getElementById('feedbackForm');
+    const sendBtn = document.getElementById('sendFeedbackBtn');
+    const statusDiv = document.getElementById('feedbackStatus');
+
+    // Open modal
+    feedbackBtn.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = {
+            from_name: document.getElementById('userName').value,
+            from_email: document.getElementById('userEmail').value,
+            message: document.getElementById('userMessage').value,
+            to_email: 'paustudylaptop@gmail.com'
+        };
+
+        // Disable button and show loading
+        sendBtn.disabled = true;
+        sendBtn.textContent = 'Sending...';
+        statusDiv.style.display = 'none';
+        statusDiv.className = 'feedback-status';
+
+        try {
+            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, formData);
+            
+            statusDiv.textContent = 'Thank you! Your feedback has been sent! 🎉';
+            statusDiv.className = 'feedback-status success';
+            form.reset();
+
+            // Close modal after 2 seconds
+            setTimeout(() => {
+                modal.style.display = 'none';
+                statusDiv.style.display = 'none';
+            }, 2000);
+
+        } catch (error) {
+            console.error('Failed to send feedback:', error);
+            statusDiv.textContent = 'Failed to send. Please try again. ❌';
+            statusDiv.className = 'feedback-status error';
+        } finally {
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send Feedback';
+        }
+    });
+}
