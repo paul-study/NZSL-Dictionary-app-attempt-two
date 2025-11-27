@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NZSL - Speech to Sign Language</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Compromise NLP library for NZSL grammar conversion -->
+    <script src="https://unpkg.com/compromise"></script>
+    <!-- EmailJS library for feedback form -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -12,6 +16,43 @@
             <h1>🤟 NZSL Speech to Sign</h1>
             <p class="subtitle">New Zealand Sign Language Translator</p>
         </header>
+
+        <!-- Feedback Button -->
+        <div class="feedback-button-container">
+            <button id="feedbackBtn" class="btn-feedback">
+                💬 We'd Love Your Feedback & Ideas!
+            </button>
+        </div>
+
+        <!-- Feedback Modal -->
+        <div id="feedbackModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Send Us Your Feedback</h2>
+                <p>We'd love to hear your thoughts, suggestions, or ideas for improving this app!</p>
+                
+                <form id="feedbackForm">
+                    <div class="form-group">
+                        <label for="userName">Name:</label>
+                        <input type="text" id="userName" name="userName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userEmail">Email:</label>
+                        <input type="email" id="userEmail" name="userEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userMessage">Message:</label>
+                        <textarea id="userMessage" name="userMessage" rows="6" required></textarea>
+                    </div>
+                    
+                    <button type="submit" id="sendFeedbackBtn" class="btn btn-primary">Send Feedback</button>
+                    
+                    <div id="feedbackStatus" class="feedback-status"></div>
+                </form>
+            </div>
+        </div>
 
         <main>
             <!-- Speech Input Section -->
