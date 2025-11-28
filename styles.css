@@ -6,19 +6,21 @@
 }
 
 :root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
-    --secondary-color: #64748b;
-    --success-color: #10b981;
+    /* Deaf Community Colors */
+    --primary-color: #0d9488;      /* Turquoise - Sign Language & Deaf culture */
+    --primary-hover: #0f766e;
+    --secondary-color: #1e3a5f;    /* Navy Blue - Deaf awareness */
+    --accent-color: #fbbf24;       /* Yellow - Light, life, coexistence */
+    --success-color: #0d9488;      /* Turquoise */
     --danger-color: #ef4444;
-    --warning-color: #f59e0b;
-    --background: #f8fafc;
+    --warning-color: #fbbf24;      /* Yellow */
+    --background: #f0fdfa;         /* Light turquoise tint */
     --card-bg: #ffffff;
-    --text-primary: #1e293b;
+    --text-primary: #1e3a5f;       /* Navy blue text */
     --text-secondary: #64748b;
-    --border-color: #e2e8f0;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --border-color: #99f6e4;       /* Light turquoise border */
+    --shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.1), 0 2px 4px -1px rgba(13, 148, 136, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(13, 148, 136, 0.1), 0 4px 6px -2px rgba(13, 148, 136, 0.05);
 }
 
 body {
@@ -42,7 +44,7 @@ header {
     justify-content: center;
     gap: 25px;
     padding: 30px 40px;
-    background: linear-gradient(135deg, var(--primary-color), #7c3aed);
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
     color: white;
     border-radius: 20px;
     margin-bottom: 30px;
@@ -100,16 +102,66 @@ section {
     background: var(--card-bg);
     border-radius: 16px;
     padding: 30px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary-color);
+    position: relative;
 }
 
 section h2 {
     color: var(--text-primary);
     margin-bottom: 20px;
     font-size: 1.5rem;
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+section h2::before {
+    font-size: 1.3rem;
+}
+
+/* Section-specific colors and icons */
+.input-section {
+    border-left-color: var(--primary-color);  /* Turquoise */
+}
+
+.input-section h2::before {
+    content: "🎤";
+}
+
+.recognized-section {
+    border-left-color: var(--accent-color);   /* Yellow */
+}
+
+.recognized-section h2::before {
+    content: "📝";
+}
+
+.video-section {
+    border-left-color: var(--secondary-color); /* Navy */
+}
+
+.video-section h2::before {
+    content: "🎬";
+}
+
+.search-section {
+    border-left-color: var(--primary-color);  /* Turquoise */
+}
+
+.search-section h2::before {
+    content: "🔍";
+}
+
+.slideshow-section {
+    border-left-color: var(--accent-color);   /* Yellow */
+}
+
+.slideshow-section h2::before {
+    content: "▶️";
 }
 
 /* Button Styles */
@@ -469,7 +521,7 @@ section h2 {
 
 /* Footer */
 footer {
-    background: var(--card-bg);
+    background: var(--secondary-color);
     border-radius: 16px;
     padding: 25px 30px;
     margin-top: 10px;
@@ -482,7 +534,7 @@ footer {
     justify-content: center;
     gap: 20px;
     padding-bottom: 15px;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     margin-bottom: 15px;
 }
 
@@ -491,13 +543,13 @@ footer {
 }
 
 .footer-title {
-    color: var(--text-primary);
+    color: white;
     font-weight: 600;
     margin-bottom: 4px;
 }
 
 .footer-note {
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 0.85rem;
 }
 
@@ -515,7 +567,7 @@ footer {
 
 .footer-copyright {
     text-align: center;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 0.85rem;
 }
 
@@ -619,8 +671,9 @@ footer .note {
 
 /* Slideshow Section */
 .slideshow-section {
-    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-    border: 2px solid #22c55e;
+    background: linear-gradient(135deg, #fefce8, #fef9c3);
+    border: 2px solid var(--accent-color);
+    border-left: 4px solid var(--accent-color);
 }
 
 .slideshow-description {
@@ -652,8 +705,8 @@ footer .note {
 }
 
 .slideshow-status.playing {
-    background: #dcfce7;
-    color: #166534;
+    background: #ccfbf1;
+    color: #0f766e;
 }
 
 .slideshow-status.paused {
@@ -662,7 +715,7 @@ footer .note {
 }
 
 .slideshow-video-container {
-    background: #1e293b;
+    background: var(--secondary-color);
     border-radius: 15px;
     min-height: 400px;
     display: flex;
@@ -784,26 +837,26 @@ footer .note {
 }
 
 .btn-feedback {
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    color: #333;
+    background: linear-gradient(135deg, #fbbf24, #fcd34d);
+    color: var(--secondary-color);
     border: none;
     padding: 20px 40px;
     font-size: 1.3rem;
     font-weight: bold;
     border-radius: 50px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
     transition: all 0.3s ease;
     animation: feedbackPulse 2s infinite;
 }
 
 .btn-feedback:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
 }
 
 .btn-website {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
     color: white;
     border: none;
     padding: 20px 40px;
@@ -811,7 +864,7 @@ footer .note {
     font-weight: bold;
     border-radius: 50px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4);
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
@@ -819,7 +872,7 @@ footer .note {
 
 .btn-website:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+    box-shadow: 0 6px 20px rgba(13, 148, 136, 0.6);
 }
 
 @keyframes feedbackPulse {
