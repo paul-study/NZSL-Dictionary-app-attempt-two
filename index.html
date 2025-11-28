@@ -11,11 +11,11 @@
     <meta name="keywords" content="NZSL, New Zealand Sign Language, sign language translator, speech to sign, deaf communication, learn NZSL, NZSL dictionary, sign language videos, Tohu Korero, accessible communication, deaf community NZ">
     <meta name="author" content="Tohu Korero">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://tohukorero.netlify.app/">
+    <link rel="canonical" href="https://tohu.netlify.app/">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tohukorero.netlify.app/">
+    <meta property="og:url" content="https://tohu.netlify.app/">
     <meta property="og:title" content="NZSL Dictionary - Free Speech to New Zealand Sign Language Translator">
     <meta property="og:description" content="Convert speech or text to New Zealand Sign Language videos instantly. Learn NZSL with 4800+ signs. Free accessible communication tool.">
     <meta property="og:image" content="signApp.png">
@@ -23,7 +23,7 @@
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://tohukorero.netlify.app/">
+    <meta property="twitter:url" content="https://tohu.netlify.app/">
     <meta property="twitter:title" content="NZSL Dictionary - Free Speech to New Zealand Sign Language Translator">
     <meta property="twitter:description" content="Convert speech or text to New Zealand Sign Language videos instantly. Learn NZSL with 4800+ signs.">
     <meta property="twitter:image" content="signApp.png">
@@ -34,6 +34,11 @@
     <meta name="geo.region" content="NZ">
     <meta name="geo.country" content="New Zealand">
     
+    <!-- Favicon & App Icons -->
+    <link rel="icon" type="image/png" href="signApp.png">
+    <link rel="apple-touch-icon" href="signApp.png">
+    <link rel="manifest" href="manifest.json">
+    
     <!-- Structured Data for Search Engines -->
     <script type="application/ld+json">
     {
@@ -41,7 +46,7 @@
         "@type": "WebApplication",
         "name": "NZSL Dictionary - Speech to Sign Language Translator",
         "description": "Free online New Zealand Sign Language translator. Convert speech or text to NZSL sign videos instantly with 4800+ signs.",
-        "url": "https://tohukorero.netlify.app/",
+        "url": "https://tohu.netlify.app/",
         "applicationCategory": "EducationalApplication",
         "operatingSystem": "Any",
         "offers": {
@@ -51,12 +56,87 @@
         },
         "author": {
             "@type": "Organization",
-            "name": "Tohu Korero"
+            "name": "Tohu Korero",
+            "url": "https://tohukorero.netlify.app/"
         },
         "inLanguage": ["en", "nzs"],
-        "accessibilityFeature": ["audioDescription", "signLanguage"],
+        "accessibilityFeature": ["audioDescription", "signLanguage", "captions"],
         "accessibilityHazard": "none",
         "keywords": "NZSL, New Zealand Sign Language, sign language translator, deaf communication, learn sign language"
+    }
+    </script>
+    
+    <!-- FAQ Schema for Google Rich Results -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is NZSL?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "NZSL (New Zealand Sign Language) is one of New Zealand's official languages, used by the Deaf community. It has its own grammar structure different from English."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I use this NZSL translator?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Click the microphone button and speak, or type words in the text box. The app will show you NZSL sign videos for each word. Works best in Chrome browser."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is this NZSL dictionary free?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes! This NZSL dictionary and translator is completely free to use. It contains over 4800 signs from the official NZSL dictionary."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I learn NZSL with this app?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, you can use this app to learn basic NZSL signs. The app converts English to NZSL grammar structure and shows video demonstrations of each sign."
+                }
+            }
+        ]
+    }
+    </script>
+    
+    <!-- HowTo Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Translate English to New Zealand Sign Language",
+        "description": "Learn how to use the NZSL Dictionary app to translate spoken or written English into NZSL sign videos.",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "name": "Open the app",
+                "text": "Visit tohu.netlify.app in your web browser (Chrome recommended)"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "Input your words",
+                "text": "Either click the microphone to speak, or type your words in the text box"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "Watch the signs",
+                "text": "The app will show NZSL video signs for each word in your sentence"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "Use slideshow mode",
+                "text": "Click Play Slideshow to watch all signs play automatically in sequence"
+            }
+        ]
     }
     </script>
     

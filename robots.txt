@@ -1,0 +1,12 @@
+# Robots.txt for Tohu Korero - NZSL Dictionary
+# https://tohu.netlify.app/
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://tohu.netlify.app/sitemap.xml
+
+# Disallow crawling of data files (optional - keeps JSON out of search results)
+Disallow: /data/
