@@ -233,6 +233,14 @@ class NZSLApp {
             this.updateStatus('Ready to listen', 'ready');
             this.elements.startBtn.disabled = false;
             this.elements.stopBtn.disabled = true;
+            
+            // Scroll to recognized words section after a delay to allow final processing
+            setTimeout(() => {
+                const recognizedSection = document.querySelector('.recognized-section');
+                if (recognizedSection) {
+                    recognizedSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 500);
         };
         
         this.recognition.onresult = (event) => {

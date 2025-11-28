@@ -1,53 +1,80 @@
-NZSL-Dictionary
-===============
+# 🤟 NZSL Speech to Sign Language Translator
 
-This package contains a node js script, which scrapes the entire library of
-signs from https://nzsl.vuw.ac.nz, downloading videos of each sign, and usage
-videos, with each sign labeled by an integer ID number, and the sequence of
-signs in usage videos labeled in order (without timing info). It also has each
-sign's position and handshape labeled.
+A web application that converts spoken or typed English into New Zealand Sign Language (NZSL) video demonstrations.
 
-Information is organised in to 3 folders:
+## Features
 
- - `/data` - json files with metadata and labels, for each sign in the set
- - `/video` - numbered folders, sign demonstration and example usage videos
- referenced in data
- - `/image` - images of handshapes, locations, and individual illustrations of
- each sign
+- **Speech Recognition** - Speak naturally and have your words converted to text
+- **NZSL Grammar Conversion** - Automatically restructures sentences using NZSL grammar rules:
+  - Time words come first
+  - Adjectives follow nouns
+  - Negatives come last
+- **Sign Video Playback** - Watch high-quality videos of each sign
+- **Sign Slideshow** - Play all translated signs in a continuous loop
+- **Search Function** - Search the dictionary for specific signs
+- **Feedback System** - Built-in feedback form to share ideas and suggestions
 
-You'll also find scrape.js, which generated this dataset, and can be used to
-update it in the future.
+## Getting Started
 
-Data Information
-================
+### Prerequisites
 
-An example sign metadata file, annotated with information about each field:
+- A modern web browser (Chrome recommended for speech recognition)
+- Node.js (for running the local server)
 
-```javascript
-// taken from /data/676.json
-{
-  // nzsl_id is the ID number found in the URL on the NZSL website. newer signs
-  // have higher numbers, and some numbers do not have a sign, presumably
-  // deleted at some point numbers do not seem to be reused. They are treated
-  // as unique addresses in this dataset
-  "nzsl_id": 676,
-  // translation info is provided in the gloss, in both english and maori
-  "gloss": {
-    "english": ["balance"],
-    "english_secondary": ["equation", "level"],
-    "maori": ["ka hē noa iho"],
-    "attributes": ["noun", "verb"]
-  },
-  // the video file demonstrating the sign is specified. this video can be found
-  // at /video/676/balance.676.main_glosses.mb.r480x360.mp4
-  "video": "balance.676.main_glosses.mb.r480x360.mp4",
-  // usages provide examples of this sign used in context. some signs have
-  // multiple usages listed
-  "usage": [
-    {
-      // usage video path /video/676/balance.676.finalexample1.mb.r480x360.mp4
-      "video": "balance.676.finalexample1.mb.r480x360.mp4",
-      // signs is an ordered list of the signs shown in the video referenced
+### Running the App
+
+1. Open a terminal in the project directory
+2. Start the local server:
+   ```bash
+   npx http-server -p 8080
+   ```
+3. Open your browser to `http://localhost:8080`
+
+## Project Structure
+
+```
+NZSL-Dictionary/
+├── index.html          # Main HTML file
+├── styles.css          # CSS styles
+├── app.js              # Main JavaScript application
+├── signs-index.json    # Pre-built index of all signs
+├── generate-index.js   # Script to regenerate the index
+├── scrape.js           # Original data scraping script
+├── data/               # JSON files with sign metadata
+├── image/              # Sign illustration images
+└── video/              # Sign demonstration videos (optional)
+```
+
+## Data Source
+
+Sign data is sourced from the [NZSL Online Dictionary](https://www.nzsl.nz/), maintained by the Deaf Studies Research Unit at Victoria University of Wellington.
+
+Videos are loaded from the official NZSL media server.
+
+## Technologies Used
+
+- **HTML5/CSS3/JavaScript** - Frontend
+- **Web Speech API** - Speech recognition
+- **Compromise NLP** - Natural language processing for grammar conversion
+- **EmailJS** - Feedback form email delivery
+
+## NZSL Grammar Rules
+
+The app applies these NZSL grammar transformations:
+
+1. **Time First**: "I will go home tomorrow" → "TOMORROW ME GO HOME"
+2. **Adjectives After Nouns**: "The red car" → "CAR RED"
+3. **Negatives Last**: "I don't want food" → "ME WANT FOOD NOT"
+4. **Pronoun Simplification**: "I", "my", "mine" → "ME"
+
+## License
+
+NZSL Dictionary content is licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+## Acknowledgments
+
+- Deaf Studies Research Unit, Victoria University of Wellington
+- NZSL Online Dictionary team
       // established signs are listed with a nzsl_id number, and classifier
       // signs are listed as a string in the format cl:plain-text-gloss
       // refer to https://nzsl.vuw.ac.nz/classifiers/ for info on classifier signs
@@ -55,8 +82,7 @@ An example sign metadata file, annotated with information about each field:
       "signs": [2297, 3382, "cl:get-on-horse", 4581, 676, "cl:fall-off-horse"],
       // an explanation of the meaning of the usage video, in English.
       "translation": "He mounted a horse but lost his balance and fell off."
-    }
-  ],
+   
   // attributes of the sign. You can expect a handshape and a location to be
   // listed and can treat these filenames as unique id's for each position and
   // handshape. the images can be found in /image/handshape.1.1.1-...png etc
@@ -66,7 +92,7 @@ An example sign metadata file, annotated with information about each field:
   },
   // black and white cartoon illustration of the sign, available in /image/
   "image": "balance-676.png"
-}
+
 ```
 
 Where are the videos?!

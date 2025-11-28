@@ -37,8 +37,11 @@ body {
 
 /* Header Styles */
 header {
-    text-align: center;
-    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    padding: 30px 40px;
     background: linear-gradient(135deg, var(--primary-color), #7c3aed);
     color: white;
     border-radius: 20px;
@@ -46,14 +49,50 @@ header {
     box-shadow: var(--shadow-lg);
 }
 
+.header-content {
+    text-align: left;
+}
+
+.logo-link {
+    display: inline-block;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.logo-link:hover {
+    transform: scale(1.05);
+}
+
+.header-logo {
+    width: 100px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
 header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+    font-size: 2.2rem;
+    margin-bottom: 5px;
 }
 
 header .subtitle {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .header-content {
+        text-align: center;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
 }
 
 /* Section Styles */
@@ -430,9 +469,65 @@ section h2 {
 
 /* Footer */
 footer {
-    text-align: center;
-    padding: 30px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 25px 30px;
+    margin-top: 10px;
+    box-shadow: var(--shadow);
+}
+
+.footer-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 15px;
+}
+
+.footer-content {
+    text-align: left;
+}
+
+.footer-title {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.footer-note {
     color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.footer-logo {
+    width: 50px;
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.footer-logo:hover {
+    transform: scale(1.05);
+}
+
+.footer-copyright {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 500px) {
+    .footer-main {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-content {
+        text-align: center;
+    }
 }
 
 footer .note {
@@ -680,7 +775,11 @@ footer .note {
 
 /* Feedback Button */
 .feedback-button-container {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
     margin: 20px 0;
 }
 
@@ -701,6 +800,26 @@ footer .note {
 .btn-feedback:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+}
+
+.btn-website {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-website:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
 }
 
 @keyframes feedbackPulse {
