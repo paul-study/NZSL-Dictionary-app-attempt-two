@@ -285,6 +285,14 @@ class NZSLApp {
             if (text) {
                 this.displayRecognizedText(text);
                 this.translateText(text);
+                
+                // Scroll to recognized words section
+                setTimeout(() => {
+                    const recognizedSection = document.querySelector('.recognized-section');
+                    if (recognizedSection) {
+                        recognizedSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
             }
         });
         
@@ -991,5 +999,70 @@ function initFeedbackForm() {
             sendBtn.disabled = false;
             sendBtn.textContent = 'Send Feedback';
         }
+    });
+}
+
+// PWA Install functionality
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+// Listen for the beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+    // Show the install button
+    if (installBtn) {
+        installBtn.style.display = 'block';
+    }
+});
+
+// Handle install button click
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        
+        // Show the install prompt
+        deferredPrompt.prompt();
+        
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to install prompt: ${outcome}`);
+        
+        // Clear the deferredPrompt
+        deferredPrompt = null;
+        
+        // Hide the install button
+        installBtn.style.display = 'none';
+    });
+}
+
+// Hide install button if app is already installed
+window.addEventListener('appinstalled', () => {
+    console.log('PWA was installed');
+    if (installBtn) {
+        installBtn.style.display = 'none';
+    }
+    deferredPrompt = null;
+});
+
+// Check if running as installed PWA (standalone mode)
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    if (installBtn) {
+        installBtn.style.display = 'none';
+    }
+}
+
+// Register Service Worker for PWA installation
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('Service Worker registered:', registration.scope);
+            })
+            .catch(error => {
+                console.log('Service Worker registration failed:', error);
+            });
     });
 }

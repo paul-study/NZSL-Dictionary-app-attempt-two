@@ -156,6 +156,9 @@
                 <h1>🤟 NZSL Speech to Sign</h1>
                 <p class="subtitle">New Zealand Sign Language Translator</p>
             </div>
+            <button id="installBtn" class="btn-install" style="display: none;">
+                📲 Install App
+            </button>
         </header>
 
         <!-- Feedback Button -->
@@ -202,6 +205,7 @@
             <!-- Speech Input Section -->
             <section class="input-section">
                 <h2>Speak or Type Your Words</h2>
+                <p class="section-description">Use the microphone to speak your words, or type them in the text box below. Click "Translate" to convert your words into NZSL signs.</p>
                 
                 <div class="speech-controls">
                     <button id="startBtn" class="btn btn-primary">
@@ -229,6 +233,7 @@
             <!-- Recognized Text Display -->
             <section class="recognized-section">
                 <h2>Recognized Words</h2>
+                <p class="section-description">Your words appear here, automatically converted to NZSL grammar (time first, adjectives after nouns, negatives last). Click any word to see its sign video.</p>
                 <div id="recognizedText" class="recognized-text">
                     <p class="placeholder-text">Your spoken words will appear here...</p>
                 </div>
@@ -238,6 +243,7 @@
             <!-- Sign Video Display -->
             <section class="video-section">
                 <h2>Sign Language Videos</h2>
+                <p class="section-description">Watch the NZSL sign for each word here. Use the Previous and Next buttons to navigate through your signs, or jump to any word from the list above.</p>
                 
                 <div class="video-container" id="videoContainer">
                     <div class="video-placeholder">
@@ -258,6 +264,7 @@
             <!-- Search Section -->
             <section class="search-section">
                 <h2>Search Signs</h2>
+                <p class="section-description">Search for any word in the NZSL dictionary. Type a word and select from the suggestions to see its sign video instantly.</p>
                 <div class="search-container">
                     <input type="text" id="searchInput" placeholder="Search for a sign...">
                     <button id="searchBtn" class="btn btn-search">Search</button>
